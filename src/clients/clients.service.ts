@@ -37,7 +37,7 @@ export class ClientsService {
       const token = createHash('md5').update(parsedEmail).digest('hex');
       const row = await sheet.addRow({
         email: parsedEmail,
-        github: github,
+        github: github.trim().toLowerCase(),
         name: name,
         token: token,
       });

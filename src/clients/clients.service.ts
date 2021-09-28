@@ -26,16 +26,17 @@ export class ClientsService {
 
   async sheetRegister(body: CreateClientSheetDto) {
     const { email, github, name } = body;
+    const parsedEmail = email.trim().toLowerCase();
     const githubExists = await this.gitHubService.verifyGithub(github);
     if (!githubExists) {
       throw new Error("Provided GitHub profile don't exists");
     }
-    const user = await this.queryClient(email);
+    const user = await this.queryClient(parsedEmail);
     if (user.length == 0) {
       const sheet = (await this.googleSheet.getDoc()).sheetsByIndex[0];
-      const token = createHash('md5').update(email).digest('hex');
+      const token = createHash('md5').update(parsedEmail).digest('hex');
       const row = await sheet.addRow({
-        email: email,
+        email: parsedEmail,
         github: github,
         name: name,
         token: token,

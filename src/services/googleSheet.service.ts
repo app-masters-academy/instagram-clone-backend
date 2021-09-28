@@ -11,7 +11,7 @@ export class GoogleService {
   constructor() {
     this.sheetId = process.env.SHEET_ID;
     this.sheetEmail = process.env.SHEET_API_EMAIL;
-    this.privateKey = process.env.SHEET_API_KEY;
+    this.privateKey = process.env.SHEET_API_PRIVATE_KEY;
     this.doc = new GoogleSpreadsheet(this.sheetId);
     this.doc.useServiceAccountAuth({
       client_email: this.sheetEmail,

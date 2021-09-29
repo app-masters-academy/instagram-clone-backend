@@ -1,0 +1,16 @@
+{
+  "type": "postgres",
+  "host": "localhost",
+  "port": 5432,
+  "username": "psql",
+  "password": "1234",
+  "database": "myAwesomeDbName",
+  "entities": ["dist/**/*.entity{ .ts,.js}"],
+  "synchronize": false,
+  "migrations": ["dist/migrations/*{.ts,.js}"],
+  "migrationsTableName": "myMigrationsTableName",
+  "migrationsRun": true,
+  "cli": {
+    "migrationsDir": "migrations"
+  }
+}

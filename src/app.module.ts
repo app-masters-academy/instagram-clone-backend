@@ -5,21 +5,14 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ClientsModule } from './clients/clients.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DB_HOST || 'localhost',
-      port: Number(process.env.DB_PORT) || 5432,
-      username: process.env.DB_USER || '',
-      password: process.env.DB_PASS || '',
-      database: process.env.DB_NAME || '',
-      entities: ['dist/**/*.entity{.ts,.js}'],
-      synchronize: false,
-    }),
+    TypeOrmModule.forRoot(),
     ClientsModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -9,12 +9,12 @@ import {
 import { ClientsService } from './clients.service';
 import { CreateClientSheetDto } from './dto/create-client-sheet.dto';
 
-UsePipes(new ValidationPipe());
+@UsePipes(new ValidationPipe())
 @Controller('client')
 export class ClientsController {
   constructor(private readonly clientsService: ClientsService) {}
   @Post('/')
   registerClient(@Body() createClientSheetDto: CreateClientSheetDto) {
-    return this.clientsService.sheetRegister(createClientSheetDto);
+    return this.clientsService.login(createClientSheetDto);
   }
 }

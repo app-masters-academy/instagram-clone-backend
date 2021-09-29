@@ -1,5 +1,7 @@
 import { Injectable, CACHE_MANAGER, Inject } from '@nestjs/common';
 
+import { v4 as uuidv4 } from 'uuid';
+
 import { Cache } from 'cache-manager';
 
 import { CreateClientSheetDto } from './dto/create-client-sheet.dto';
@@ -36,6 +38,7 @@ export class ClientsService {
     if (user) {
       return { token: user.token };
     }
+    body.id = uuidv4();
 
     const addedClient = await this.googleSheet.addToSheet(body);
 

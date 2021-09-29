@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
 
-export class CreateClientSheetDto {
+export class CreateClientDto {
   id: string;
 
   @IsEmail()
@@ -11,4 +11,6 @@ export class CreateClientSheetDto {
 
   @IsNotEmpty()
   name: string;
+
+  token: string;
 }

@@ -7,14 +7,14 @@ import {
 } from '@nestjs/common';
 
 import { ClientsService } from './clients.service';
-import { CreateClientSheetDto } from './dto/create-client-sheet.dto';
+import { CreateClientDto } from './dto/create-client.dto';
 
 @UsePipes(new ValidationPipe())
 @Controller('client')
 export class ClientsController {
   constructor(private readonly clientsService: ClientsService) {}
   @Post('/')
-  registerClient(@Body() createClientSheetDto: CreateClientSheetDto) {
+  registerClient(@Body() createClientSheetDto: CreateClientDto) {
     return this.clientsService.login(createClientSheetDto);
   }
 }

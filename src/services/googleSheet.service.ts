@@ -1,9 +1,8 @@
 import { Injectable, CACHE_MANAGER, Inject } from '@nestjs/common';
 import { GoogleSpreadsheet, GoogleSpreadsheetRow } from 'google-spreadsheet';
 import { Cache } from 'cache-manager';
-import { createHash } from 'crypto';
 
-import { CreateClientSheetDto } from 'src/clients/dto/create-client-sheet.dto';
+import { CreateClientDto } from 'src/clients/dto/create-client.dto';
 
 @Injectable()
 export class GoogleService {
@@ -54,12 +53,12 @@ export class GoogleService {
     return user[0];
   }
 
-  async addToSheet(user: CreateClientSheetDto): Promise<GoogleSpreadsheetRow> {
-    const { email, github, name } = user;
+  async addToSheet(user: CreateClientDto): Promise<GoogleSpreadsheetRow> {
+    const { id, email, github, token, name } = user;
     const parsedEmail = email.trim().toLowerCase();
     const sheet = (await this.getDoc()).sheetsByIndex[0];
-    const token = createHash('md5').update(parsedEmail).digest('hex');
     const row = await sheet.addRow({
+      id: id,
       email: parsedEmail,
       github: github.trim().toLowerCase(),
       name: name.toLowerCase(),

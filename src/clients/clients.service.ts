@@ -30,7 +30,7 @@ export class ClientsService {
     if (!githubExists) {
       throw new Error("Provided GitHub profile don't exists");
     }
-    const user: GoogleSpreadsheetRow = await this.googleSheet.querySheet(
+    const user: GoogleSpreadsheetRow = await this.googleSheet.querySheetByEmail(
       parsedEmail,
     );
     if (user) {

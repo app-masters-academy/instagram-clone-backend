@@ -28,7 +28,7 @@ export class GoogleService {
     return this.doc;
   }
 
-  async querySheet(email: string): Promise<GoogleSpreadsheetRow> {
+  async querySheetByEmail(email: string): Promise<GoogleSpreadsheetRow> {
     const sheet = (await this.getDoc()).sheetsByIndex[0];
     const parsedEmail = email.trim().toLowerCase();
     const rows = await sheet.getRows();
@@ -38,6 +38,19 @@ export class GoogleService {
     const user = rows.filter((row) => {
       return row.email === parsedEmail;
     });
+    return user[0];
+  }
+
+  async querySheetByToken(token: string): Promise<GoogleSpreadsheetRow> {
+    const sheet = (await this.getDoc()).sheetsByIndex[0];
+    const rows = await sheet.getRows();
+    rows.forEach(async (row) => {
+      await this.cacheManager.set(row.token, row);
+    });
+    const user = rows.filter((row) => {
+      return row.token === token;
+    });
+    console.log(user[0].token);
     return user[0];
   }
 

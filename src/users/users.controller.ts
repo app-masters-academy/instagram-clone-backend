@@ -17,8 +17,6 @@ export class UsersController {
 
   @Post('/login')
   login(@Body() createUserDto: CreateUserDto, @RealIP() ip: string) {
-    console.log(createUserDto);
-    return createUserDto;
-    //return this.usersService.login(createUserDto, ip);
+    return this.usersService.login(createUserDto, ip);
   }
 }

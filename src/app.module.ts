@@ -1,5 +1,6 @@
 import {
   CacheModule,
+  Global,
   MiddlewareConsumer,
   Module,
   NestModule,
@@ -14,7 +15,9 @@ import { UsersModule } from './users/users.module';
 import { AuthMiddleware } from './middlewares/auth.middleware';
 import { GoogleService } from './services/googleSheet.service';
 import { PostsModule } from './posts/posts.module';
+import { ClientRepository } from './clients/entities/client.repository';
 
+@Global()
 @Module({
   imports: [
     CacheModule.register({ max: 10000, ttl: 0 }),
@@ -25,7 +28,7 @@ import { PostsModule } from './posts/posts.module';
     PostsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, GoogleService],
+  providers: [AppService, GoogleService, ClientRepository],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

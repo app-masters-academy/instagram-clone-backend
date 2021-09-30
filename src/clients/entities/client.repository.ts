@@ -13,4 +13,9 @@ export class ClientRepository extends Repository<Client> {
     await this.save(client);
     return client;
   }
+
+  async queryClientByToken(token: string) {
+    const client = await this.findOne({ token: token });
+    return client;
+  }
 }

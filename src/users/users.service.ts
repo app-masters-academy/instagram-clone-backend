@@ -19,7 +19,6 @@ export class UsersService {
     const { email, password } = createUserDto;
     const parsedEmail = email.trim().toLowerCase();
     const userExists = await this.userRepository.findUserByEmail(parsedEmail);
-    console.log(userExists);
     if (userExists) {
       const passEqual = await compare(password, userExists.password);
       if (!passEqual) {

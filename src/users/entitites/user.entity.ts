@@ -28,7 +28,6 @@ export class User extends BaseEntity {
   password: string;
 
   @Column({ nullable: false })
-  @IsIP(4)
   ip: string;
 
   /*@OneToMany(() => Post, (post: Post) => post.id)

@@ -1,8 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { compare } from 'bcrypt';
 
@@ -19,22 +15,14 @@ export class UsersService {
     const { email, password } = createUserDto;
     const parsedEmail = email.trim().toLowerCase();
     const userExists = await this.userRepository.findUserByEmail(parsedEmail);
-    if (userExists) {
-      const passEqual = await compare(password, userExists.password);
-      if (!passEqual) {
-        throw new ForbiddenException('Wrong email or password');
-      }
-      return {
-        auth: true,
-      };
-    } else {
-      try {
-        const user = await this.userRepository.createUser(createUserDto, ip);
-        console.log(user);
-        return { auth: true };
-      } catch {
-        throw new InternalServerErrorException('Error creating user');
-      }
+    if (!userExists) {
+      await this.userRepository.createUser(createUserDto, ip);
+      return { auth: true };
     }
+    const passEqual = await compare(password, userExists.password);
+    if (!passEqual) {
+      throw new BadRequestException('Wrong email or password');
+    }
+    return { auth: true };
   }
 }

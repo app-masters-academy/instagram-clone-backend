@@ -16,7 +16,8 @@ import { UserRepository } from 'src/users/entitites/user.repository';
     }),
     UsersModule,
   ],
+  exports: [TypeOrmModule],
   controllers: [PostsController],
-  providers: [PostsService, PostRepository, GoogleService],
+  providers: [PostsService, GoogleService],
 })
 export class PostsModule {}

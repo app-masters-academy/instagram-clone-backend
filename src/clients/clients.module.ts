@@ -15,6 +15,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }),
   ],
   controllers: [ClientsController],
-  providers: [ClientsService, GithubService, GoogleService, ClientRepository],
+  providers: [ClientsService, GithubService, GoogleService],
 })
 export class ClientsModule {}

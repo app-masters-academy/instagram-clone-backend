@@ -7,10 +7,10 @@ import { CreateClientDto } from './dto/create-client.dto';
 import { GithubService } from '../services/github.service';
 import { GoogleService } from 'src/services/googleSheet.service';
 
-import { GoogleSpreadsheetRow } from 'google-spreadsheet';
 import { ClientRepository } from './entities/client.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { createHash } from 'crypto';
+import { Client } from './entities/client.entity';
 
 @Injectable()
 export class ClientsService {
@@ -22,18 +22,12 @@ export class ClientsService {
     private clientRepository: ClientRepository,
   ) {}
 
-  async login(createClientDto: CreateClientDto) {
+  async getToken(createClientDto: CreateClientDto) {
     const { email, github } = createClientDto;
     const parsedEmail = email.trim().toLowerCase();
-    const cachedUser: GoogleSpreadsheetRow = await this.cacheManager.get(
-      parsedEmail,
-    );
-    if (cachedUser) {
-      return { token: cachedUser.token };
-    }
-    const user: GoogleSpreadsheetRow = await this.googleSheet.querySheetByEmail(
-      parsedEmail,
-    );
+    const user: Client =
+      (await this.cacheManager.get(parsedEmail)) ||
+      (await this.clientRepository.queryClientByEmail(parsedEmail));
     if (user) {
       return { token: user.token };
     }
@@ -47,9 +41,8 @@ export class ClientsService {
     createClientDto.token = createHash('md5').update(parsedEmail).digest('hex');
     const dbUser = await this.clientRepository.createClient(createClientDto);
     createClientDto.id = dbUser.id.toString();
-    console.log(createClientDto);
-    const addedClient = await this.googleSheet.addToSheet(createClientDto);
+    await this.googleSheet.addToSheet(createClientDto);
 
-    return { token: addedClient.token };
+    return { token: dbUser.token };
   }
 }

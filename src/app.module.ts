@@ -13,6 +13,7 @@ import { ClientsModule } from './clients/clients.module';
 import { UsersModule } from './users/users.module';
 import { AuthMiddleware } from './middlewares/auth.middleware';
 import { GoogleService } from './services/googleSheet.service';
+import { PostsModule } from './posts/posts.module';
 
 @Module({
   imports: [
@@ -21,12 +22,13 @@ import { GoogleService } from './services/googleSheet.service';
     TypeOrmModule.forRoot(),
     ClientsModule,
     UsersModule,
+    PostsModule,
   ],
   controllers: [AppController],
   providers: [AppService, GoogleService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes('');
+    consumer.apply(AuthMiddleware).forRoutes('post');
   }
 }

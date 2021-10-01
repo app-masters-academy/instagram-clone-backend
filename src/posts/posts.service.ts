@@ -2,9 +2,9 @@ import { Inject, Injectable, Scope } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
-import { GoogleService } from 'src/services/googleSheet.service';
 
-import { UserRepository } from 'src/users/entitites/user.repository';
+import { ClientDto } from 'src/clients/dto/client.dto';
+import { UserDto } from 'src/users/dto/user.dto';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostRepository } from './entities/post.repository';
 
@@ -14,26 +14,29 @@ export class PostsService {
     @InjectRepository(PostRepository)
     private postRepository: PostRepository,
     @Inject(REQUEST) private readonly req: Request,
-    private googleService: GoogleService,
-    private userRepository: UserRepository,
   ) {}
-  async create(createPostDto: CreatePostDto) {
-    console.log(this.req.user);
-    const userToken: string = this.req.user.token;
-    const client = await this.googleService.querySheetByToken(userToken);
-    const ip = (await this.userRepository.findUserByEmail(client.token)).ip;
+  async createPost(
+    createPostDto: CreatePostDto,
+    user: UserDto,
+    client: ClientDto,
+    ip: string,
+  ) {
+    createPostDto.photoUrl = 'sampleUrl';
     const post = {
-      description: createPostDto.description,
-      photoUrl: 'photoUrl',
+      ...createPostDto,
+      clientId: client.id,
+      user: user,
+      authorIp: ip,
     };
-    await this.postRepository.createPost(post, ip);
-    return 'This action adds a new post';
+    const addedPost = await this.postRepository.createPost(post);
+    delete addedPost.user.password;
+    return addedPost;
   }
 
-  async findAll() {
-    if (this.req.headers['all-clients']) {
-      const user = 0;
-      await this.postRepository.findAll(user);
+  async findAll(clientDto: ClientDto) {
+    if (this.req.headers['all-clients'] === 'false') {
+      const posts = await this.postRepository.findAll(clientDto.id);
+      return posts;
     } else {
       return await this.postRepository.findAll();
     }

@@ -1,22 +1,21 @@
 import {
   BaseEntity,
+  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
-  ManyToMany,
   ManyToOne,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from 'src/users/entitites/user.entity';
+import { randomUUID } from 'crypto';
+import { ILike } from '../interfaces/like.interface';
 
 @Entity()
 export class Post extends BaseEntity {
-  @PrimaryGeneratedColumn('increment')
-  id: number;
-
-  @Column({ nullable: false, default: 0 })
-  likesCount: number;
+  @PrimaryColumn({ nullable: false, unique: true })
+  id: string;
 
   @Column({ nullable: false })
   description: string;
@@ -24,14 +23,17 @@ export class Post extends BaseEntity {
   @Column({ nullable: false })
   photoUrl: string;
 
-  @ManyToMany(() => User, (user: User) => user.id)
-  likes: User[];
+  @Column({ nullable: false, default: 0 })
+  likesCount: number;
+
+  @Column({ type: 'json', nullable: true })
+  likes: ILike;
 
   @ManyToOne(() => User, (user: User) => user.id)
-  userId: User[];
+  user: User;
 
   @Column({ nullable: false })
-  clientId: number;
+  clientId: string;
 
   @Column({ nullable: false })
   authorIp: string;
@@ -41,4 +43,8 @@ export class Post extends BaseEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @BeforeInsert() generateUUID() {
+    this.id = randomUUID();
+  }
 }

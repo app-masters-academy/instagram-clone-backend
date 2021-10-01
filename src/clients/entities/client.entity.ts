@@ -1,16 +1,18 @@
+import { randomUUID } from 'crypto';
 import {
   BaseEntity,
+  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
 export class Client extends BaseEntity {
-  @PrimaryGeneratedColumn('increment')
-  id: number;
+  @PrimaryColumn({ nullable: false, unique: true })
+  id: string;
 
   @Column({ nullable: false, unique: true })
   email: string;
@@ -23,4 +25,8 @@ export class Client extends BaseEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @BeforeInsert() generateUUID() {
+    this.id = randomUUID();
+  }
 }

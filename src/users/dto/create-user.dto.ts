@@ -9,4 +9,6 @@ export class CreateUserDto {
 
   @Length(4, 20)
   readonly password: string;
+
+  clientId: string;
 }

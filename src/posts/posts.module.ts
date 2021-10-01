@@ -6,15 +6,22 @@ import { GoogleService } from 'src/services/googleSheet.service';
 import { UsersModule } from 'src/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserRepository } from 'src/users/entitites/user.repository';
+import { AuthModule } from 'src/auth/auth.module';
+import { ClientRepository } from 'src/clients/entities/client.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([PostRepository, UserRepository]),
+    AuthModule,
+    UsersModule,
+    TypeOrmModule.forFeature([
+      PostRepository,
+      UserRepository,
+      ClientRepository,
+    ]),
     CacheModule.register({
       max: 10000,
       ttl: 0,
     }),
-    UsersModule,
   ],
   exports: [TypeOrmModule],
   controllers: [PostsController],

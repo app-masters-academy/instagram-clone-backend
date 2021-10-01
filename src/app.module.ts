@@ -1,9 +1,9 @@
 import {
   CacheModule,
-  Global,
   MiddlewareConsumer,
   Module,
   NestModule,
+  RequestMethod,
 } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
@@ -12,12 +12,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ClientsModule } from './clients/clients.module';
 import { UsersModule } from './users/users.module';
-import { AuthMiddleware } from './middlewares/auth.middleware';
+import { AuthMiddleware } from './middlewares/client.middleware';
 import { GoogleService } from './services/googleSheet.service';
 import { PostsModule } from './posts/posts.module';
 import { Client } from './clients/entities/client.entity';
 import { User } from './users/entitites/user.entity';
 import { Post } from './posts/entities/post.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -36,12 +37,18 @@ import { Post } from './posts/entities/post.entity';
     ClientsModule,
     UsersModule,
     PostsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, GoogleService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes('post');
+    consumer
+      .apply(AuthMiddleware)
+      .forRoutes(
+        { path: 'post', method: RequestMethod.ALL },
+        { path: 'login', method: RequestMethod.ALL },
+      );
   }
 }

@@ -30,16 +30,16 @@ export class UsersService {
     const userExists: User =
       (await this.cacheManager.get(parsedEmail)) ||
       (await this.userRepository.findUserByEmail(createUserDto));
+
     if (!userExists) {
       createUserDto.clientId = id;
       const user = await this.userRepository.createUser(createUserDto, ip);
-      console.log(user);
+
       await this.cacheManager.set(user.email, user);
       return await this.authService.login(user);
     }
     await this.cacheManager.set(userExists.email, userExists);
     const passEqual = await compare(password, userExists.password);
-    console.log(passEqual);
     if (!passEqual) {
       throw new BadRequestException('Wrong email or password');
     }

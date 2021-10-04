@@ -1,20 +1,23 @@
 import {
   BaseEntity,
+  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
   ManyToMany,
   OneToMany,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { IsEmail, IsIP, Length } from 'class-validator';
+import { IsEmail, Length } from 'class-validator';
 import { Post } from 'src/posts/entities/post.entity';
+import { hash } from 'bcrypt';
+import { randomUUID } from 'crypto';
 
 @Entity()
 export class User extends BaseEntity {
-  @PrimaryGeneratedColumn('increment')
-  id: number;
+  @PrimaryColumn({ nullable: false, unique: true })
+  id: string;
 
   @Column({ nullable: false })
   @Length(4, 30)
@@ -28,18 +31,24 @@ export class User extends BaseEntity {
   password: string;
 
   @Column({ nullable: false })
-  @IsIP(4)
   ip: string;
 
-  /*@OneToMany(() => Post, (post: Post) => post.id)
-  posts: Post[];
+  @Column()
+  clientId: string;
 
-  @ManyToMany(() => Post, (post: Post) => post.id)
-  likes: Post[];*/
+  @OneToMany(() => Post, (post: Post) => post.id)
+  posts: Post[];
 
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @BeforeInsert() async hashPassword() {
+    this.password = await hash(this.password, 10);
+  }
+  @BeforeInsert() generateUUID() {
+    this.id = randomUUID();
+  }
 }

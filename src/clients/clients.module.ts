@@ -14,6 +14,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       ttl: 0,
     }),
   ],
+  exports: [TypeOrmModule],
   controllers: [ClientsController],
   providers: [ClientsService, GithubService, GoogleService],
 })

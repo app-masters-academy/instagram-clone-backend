@@ -3,31 +3,29 @@ import { hash } from 'bcrypt';
 import { CreateUserDto } from '../dto/create-user.dto';
 
 import { User } from './user.entity';
-import { InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { UserDto } from '../dto/user.dto';
 
+@Injectable()
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
   async createUser(createUserDto: CreateUserDto, ip: string): Promise<User> {
-    const { email, name, password } = createUserDto;
-    console.log(password);
+    const { email, name, password, clientId } = createUserDto;
+    const parsedEmail = email.trim().toLowerCase();
     const user = this.create();
-    user.email = email;
+    user.email = parsedEmail;
     user.name = name;
     user.ip = ip;
+    user.clientId = clientId;
+    user.password = password;
 
-    try {
-      user.password = await hash(password, 10);
-      await user.save();
-      user.password;
-      user.ip;
-      return user;
-    } catch (err) {
-      throw new InternalServerErrorException('Error creating User');
-    }
+    await user.save();
+    return user;
   }
 
-  async findUserByEmail(email: string) {
-    const user = await this.findOne({ email: email });
+  async findUserByEmail({ email }: CreateUserDto): Promise<User> {
+    const parsedEmail = email.trim().toLowerCase();
+    const user = await this.findOne({ email: parsedEmail });
     return user;
   }
 }

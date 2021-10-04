@@ -15,6 +15,6 @@ export class ClientsController {
   constructor(private readonly clientsService: ClientsService) {}
   @Post('/')
   registerClient(@Body() createClientSheetDto: CreateClientDto) {
-    return this.clientsService.login(createClientSheetDto);
+    return this.clientsService.getToken(createClientSheetDto);
   }
 }

@@ -39,6 +39,7 @@ const config: ConnectionOptions = {
   },
   extra: {
     ssl: true,
+    rejectUnauthorized: false,
   },
 };
 

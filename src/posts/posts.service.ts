@@ -20,8 +20,9 @@ export class PostsService {
     user: UserDto,
     client: ClientDto,
     ip: string,
+    file: Express.Multer.File,
   ) {
-    createPostDto.photoUrl = 'sampleUrl';
+    createPostDto.photoUrl = file.path;
     const post = {
       ...createPostDto,
       clientId: client.id,

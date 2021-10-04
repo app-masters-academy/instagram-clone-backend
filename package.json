@@ -14,7 +14,11 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main.js",
+<<<<<<< HEAD
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --config src/config/db.ts",
+=======
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --config src/ormconfig.ts",
+>>>>>>> 6636c3559e4e498153a3f646ba45c719efb3be40
     "typeorm:migrate": "yarn run typeorm migration:generate -- -n",
     "typeorm:run": "yarn run typeorm migration:run",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",

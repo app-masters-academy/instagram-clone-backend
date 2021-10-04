@@ -2,9 +2,9 @@ import { ConnectionOptions } from 'typeorm';
 
 // You can load you .env file here synchronously using dotenv package (not installed here),
 import * as dotenv from 'dotenv';
-
-dotenv.config();
-
+if (process.env.NODE_ENV != 'production') {
+  dotenv.config();
+}
 // You can also make a singleton service that load and expose the .env file content.
 // ...
 

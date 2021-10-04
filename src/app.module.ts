@@ -1,5 +1,6 @@
 import {
   CacheModule,
+  DynamicModule,
   MiddlewareConsumer,
   Module,
   NestModule,
@@ -18,21 +19,20 @@ import { Client } from './clients/entities/client.entity';
 import { User } from './users/entitites/user.entity';
 import { Post } from './posts/entities/post.entity';
 import { AuthModule } from './auth/auth.module';
+import * as ormconfig from './config/db';
+
+export function DatabaseOrmModule(): DynamicModule {
+  // we could load the configuration from dotEnv here,
+  // but typeORM cli would not be able to find the configuration file.
+
+  return TypeOrmModule.forRoot(ormconfig);
+}
 
 @Module({
   imports: [
     CacheModule.register({ max: 10000, ttl: 0 }),
     ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT),
-      username: process.env.DB_USER,
-      password: process.env.DB_PASS,
-      database: process.env.DB_NAME,
-      entities: [Client, User, Post],
-      synchronize: false,
-    }),
+    TypeOrmModule.forRoot(ormconfig),
     ClientsModule,
     UsersModule,
     PostsModule,

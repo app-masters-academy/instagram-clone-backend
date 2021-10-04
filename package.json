@@ -13,7 +13,7 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "yarn run typorm:run && node dist/main.js",
+    "start:prod": "yarn run typeorm:run && node dist/main.js",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --config src/config/db.ts",
     "typeorm:migrate": "yarn run typeorm migration:generate -- -n",
     "typeorm:run": "yarn run typeorm migration:run",

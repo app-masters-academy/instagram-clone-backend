@@ -37,6 +37,9 @@ const config: ConnectionOptions = {
     // to be compiled into dist/ folder.
     migrationsDir: 'src/migrations',
   },
+  extra: {
+    ssl: true,
+  },
 };
 
 export = config;

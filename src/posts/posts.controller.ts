@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  UseGuards,
+  Req,
+  Delete,
+  Param,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { RealIP } from 'nestjs-real-ip';
 
@@ -27,5 +36,12 @@ export class PostsController {
   findAll(@Req() req: any) {
     const client = <ClientDto>req.userClient;
     return this.postsService.findAll(client);
+  }
+
+  @UseGuards(AuthGuard())
+  @Delete('/:id')
+  deletePost(@Param('id') id: string, @Req() req: any) {
+    const user = <UserDto>req.user;
+    return this.postsService.deletePost(id, user);
   }
 }

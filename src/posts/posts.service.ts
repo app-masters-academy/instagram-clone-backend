@@ -1,4 +1,10 @@
-import { Inject, Injectable, Scope } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Inject,
+  Injectable,
+  Scope,
+} from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
@@ -21,7 +27,7 @@ export class PostsService {
     client: ClientDto,
     ip: string,
   ) {
-    createPostDto.photoUrl = 'sampleUrl';
+    createPostDto.photoUrl = 'sample';
     const post = {
       ...createPostDto,
       clientId: client.id,
@@ -40,5 +46,21 @@ export class PostsService {
     } else {
       return await this.postRepository.findAll();
     }
+  }
+
+  async deletePost(postId: string, user: UserDto) {
+    const post = await this.postRepository.findOne(postId, {
+      relations: ['user'],
+    });
+    if (!post) {
+      throw new BadRequestException(
+        `This post id doesn't exists or post is already excluded`,
+      );
+    }
+    if (post.user.id !== user.id) {
+      throw new ForbiddenException('Cannot remove post from another user');
+    }
+    await post.remove();
+    return { post: postId, deleted: true };
   }
 }

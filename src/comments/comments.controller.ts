@@ -1,4 +1,12 @@
-import { Body, Controller, Param, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { RealIP } from 'nestjs-real-ip';
 import { UserDto } from 'src/users/dto/user.dto';
@@ -9,15 +17,27 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
-  @Post('/:id')
+  @Post('/:postid')
   @UseGuards(AuthGuard())
   commentOnPost(
     @Body() createCommentDto: CreateCommentDto,
-    @Param('id') id: string,
+    @Param('postid') postid: string,
     @Req() req: any,
     @RealIP() ip: string,
   ) {
     const user = <UserDto>req.user;
-    return this.commentsService.commentOnPost(createCommentDto, id, user, ip);
+    return this.commentsService.commentOnPost(
+      createCommentDto,
+      postid,
+      user,
+      ip,
+    );
+  }
+
+  @Delete('/:id')
+  @UseGuards(AuthGuard())
+  deleteComment(@Param('id') id: string, @Req() req: any) {
+    const user = <UserDto>req.user;
+    return this.commentsService.deleteComment(id, user);
   }
 }

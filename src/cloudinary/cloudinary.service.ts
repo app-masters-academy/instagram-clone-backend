@@ -12,7 +12,6 @@ export class CloudinaryService {
     }
     return new Promise(async (resolve, reject) => {
       const upload = v2.uploader.upload_stream((error, result) => {
-        console.log(error);
         if (error) return reject(error);
         resolve(result);
       });

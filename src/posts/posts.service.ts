@@ -31,12 +31,7 @@ export class PostsService {
     file: Express.Multer.File,
     ip: string,
   ) {
-    const uploaded = await this.cloudinaryService
-      .uploadImage(file)
-      .catch(() => {
-        throw new BadRequestException('Wrong file type');
-      });
-    console.log(uploaded);
+    const uploaded = await this.cloudinaryService.uploadImage(file);
     createPostDto.photoUrl = uploaded.url;
     const post = {
       ...createPostDto,

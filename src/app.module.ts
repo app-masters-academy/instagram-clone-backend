@@ -16,6 +16,7 @@ import { AuthMiddleware } from './middlewares/client.middleware';
 import { GoogleService } from './services/googleSheet.service';
 import { PostsModule } from './posts/posts.module';
 import { AuthModule } from './auth/auth.module';
+import { CommentsModule } from './comments/comments.module';
 import * as ormconfig from './config/db';
 
 export function DatabaseOrmModule(): DynamicModule {
@@ -34,6 +35,7 @@ export function DatabaseOrmModule(): DynamicModule {
     UsersModule,
     PostsModule,
     AuthModule,
+    CommentsModule,
   ],
   controllers: [AppController],
   providers: [GoogleService],

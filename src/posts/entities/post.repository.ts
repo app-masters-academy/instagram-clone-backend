@@ -7,23 +7,12 @@ import { Post } from './post.entity';
 export class PostRepository extends Repository<Post> {
   async findAll(clientId?: string) {
     if (!clientId) {
-      return (await this.find({ relations: ['user'] })).map((post) => {
-        if (post.user) {
-          delete post.user.password;
-          return post;
-        }
-      });
+      const post = await this.find({ relations: ['user', 'comments'] });
+      return post;
     }
-    return (
-      await this.find({
-        relations: ['user'],
-        where: { clientId: clientId },
-      })
-    ).map((post) => {
-      if (post.user) {
-        delete post.user.password;
-        return post;
-      }
+    return await this.find({
+      relations: ['user', 'comments'],
+      where: { clientId: clientId },
     });
   }
 

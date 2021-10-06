@@ -10,6 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
 
 import { ClientDto } from 'src/clients/dto/client.dto';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { UserDto } from 'src/users/dto/user.dto';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostRepository } from './entities/post.repository';
@@ -17,6 +18,7 @@ import { PostRepository } from './entities/post.repository';
 @Injectable({ scope: Scope.REQUEST })
 export class PostsService {
   constructor(
+    private cloudinaryService: CloudinaryService,
     @InjectRepository(PostRepository)
     private postRepository: PostRepository,
     @Inject(REQUEST) private readonly req: Request,
@@ -26,9 +28,16 @@ export class PostsService {
     createPostDto: CreatePostDto,
     user: UserDto,
     client: ClientDto,
+    file: Express.Multer.File,
     ip: string,
   ) {
-    createPostDto.photoUrl = 'sample';
+    const uploaded = await this.cloudinaryService
+      .uploadImage(file)
+      .catch(() => {
+        throw new BadRequestException('Wrong file type');
+      });
+    console.log(uploaded);
+    createPostDto.photoUrl = uploaded.url;
     const post = {
       ...createPostDto,
       clientId: client.id,

@@ -7,8 +7,12 @@ import {
   Req,
   Delete,
   Param,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
+
 import { RealIP } from 'nestjs-real-ip';
 
 import { PostsService } from './posts.service';
@@ -22,14 +26,25 @@ export class PostsController {
 
   @Post()
   @UseGuards(AuthGuard())
+  @UseInterceptors(
+    FileInterceptor('file', {
+      fileFilter: (req, file, cb) => {
+        if (file.mimetype !== 'image/png') {
+          cb(null, false);
+        }
+        cb(null, true);
+      },
+    }),
+  )
   create(
     @Body() createPostDto: CreatePostDto,
     @Req() req: any,
+    @UploadedFile() file: Express.Multer.File,
     @RealIP() ip: string,
   ) {
     const user = <UserDto>req.user;
     const client = <ClientDto>req.userClient;
-    return this.postsService.createPost(createPostDto, user, client, ip);
+    return this.postsService.createPost(createPostDto, user, client, file, ip);
   }
 
   @Post('/:id/like')

@@ -29,7 +29,7 @@ export class Post extends BaseEntity {
   @Column({ nullable: false, default: 0 })
   likesCount: number;
 
-  @Column({ type: 'json', nullable: true })
+  @Column({ type: 'json', nullable: true, default: { users: [] } })
   likes: ILike;
 
   @ManyToOne(() => User, (user) => user.posts)

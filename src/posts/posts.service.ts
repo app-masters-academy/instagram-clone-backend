@@ -21,6 +21,7 @@ export class PostsService {
     private postRepository: PostRepository,
     @Inject(REQUEST) private readonly req: Request,
   ) {}
+
   async createPost(
     createPostDto: CreatePostDto,
     user: UserDto,
@@ -36,6 +37,31 @@ export class PostsService {
     };
     const addedPost = await this.postRepository.createPost(post);
     return addedPost;
+  }
+
+  async likePost(postId: string, user: UserDto) {
+    const post = await this.postRepository.findOne(postId);
+    if (!post) {
+      throw new BadRequestException(
+        'Post not found, try another with another post id',
+      );
+    }
+    if (post.likes == null) {
+      post.likes = { users: [] };
+      await post.save();
+    }
+    if (post.likes.users.includes(user.id)) {
+      post.likes.users = post.likes.users.filter((arrUser) => {
+        return arrUser != user.id;
+      });
+      post.likesCount--;
+      await post.save();
+      return post;
+    }
+    post.likes.users.push(user.id);
+    post.likesCount++;
+    await post.save();
+    return post;
   }
 
   async findAll(clientDto: ClientDto) {

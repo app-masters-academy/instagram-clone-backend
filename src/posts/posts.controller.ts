@@ -32,6 +32,13 @@ export class PostsController {
     return this.postsService.createPost(createPostDto, user, client, ip);
   }
 
+  @Post('/:id/like')
+  @UseGuards(AuthGuard())
+  like(@Param('id') id: string, @Req() req: any) {
+    const user = <UserDto>req.user;
+    return this.postsService.likePost(id, user);
+  }
+
   @Get()
   findAll(@Req() req: any) {
     const client = <ClientDto>req.userClient;

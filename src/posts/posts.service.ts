@@ -66,8 +66,7 @@ export class PostsService {
 
   async findAll(clientDto: ClientDto) {
     if (this.req.headers['all-clients'] === 'false') {
-      const posts = await this.postRepository.findAll(clientDto.id);
-      return posts;
+      return await this.postRepository.findAll(clientDto.id);
     } else {
       return await this.postRepository.findAll();
     }

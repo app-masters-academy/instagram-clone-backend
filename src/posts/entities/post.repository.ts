@@ -7,13 +7,22 @@ import { Post } from './post.entity';
 export class PostRepository extends Repository<Post> {
   async findAll(clientId?: string) {
     if (!clientId) {
-      const post = await this.find({ relations: ['user', 'comments'] });
-      return post;
+      const posts = await this.find({ relations: ['user', 'comments'] });
+      posts.forEach(async (post) => {
+        post.commentsCount = post.comments.length;
+        await post.save();
+      });
+      return posts;
     }
-    return await this.find({
+    const posts = await this.find({
       relations: ['user', 'comments'],
       where: { clientId: clientId },
     });
+    posts.forEach(async (post) => {
+      post.commentsCount = post.comments.length;
+      await post.save();
+    });
+    return posts;
   }
 
   async createPost(createPostDto: CreatePostDto) {

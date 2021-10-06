@@ -35,6 +35,9 @@ export class Post extends BaseEntity {
   @ManyToOne(() => User, (user) => user.posts, { eager: true })
   user: User;
 
+  @Column({ nullable: false, default: 0 })
+  commentsCount: number;
+
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[];
 

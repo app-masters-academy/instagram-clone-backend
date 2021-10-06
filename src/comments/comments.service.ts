@@ -35,6 +35,8 @@ export class CommentsService {
       ip: ip,
     };
     const addedComment = await this.commentRepository.addComment(comment);
+    post.commentsCount++;
+    await post.save();
     return addedComment;
   }
 
@@ -42,7 +44,6 @@ export class CommentsService {
     const comment = await this.commentRepository.findOne(id, {
       relations: ['user', 'post'],
     });
-    console.log(comment);
     if (!comment) {
       throw new BadRequestException(
         `Wrong comment id, or comment was already deleted`,
@@ -53,6 +54,8 @@ export class CommentsService {
         `Cannot delete comment from another person or if the post ins't yours`,
       );
     }
+    comment.post.commentsCount--;
+    await comment.post.save();
     await comment.remove();
     return { deleted: true };
   }

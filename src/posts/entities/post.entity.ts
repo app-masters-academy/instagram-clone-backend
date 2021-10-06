@@ -32,7 +32,7 @@ export class Post extends BaseEntity {
   @Column({ type: 'json', nullable: true, default: { users: [] } })
   likes: ILike;
 
-  @ManyToOne(() => User, (user) => user.posts)
+  @ManyToOne(() => User, (user) => user.posts, { eager: true })
   user: User;
 
   @OneToMany(() => Comment, (comment) => comment.post)

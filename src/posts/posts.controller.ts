@@ -38,8 +38,8 @@ export class PostsController {
     return this.postsService.findAll(client);
   }
 
-  @UseGuards(AuthGuard())
   @Delete('/:id')
+  @UseGuards(AuthGuard())
   deletePost(@Param('id') id: string, @Req() req: any) {
     const user = <UserDto>req.user;
     return this.postsService.deletePost(id, user);

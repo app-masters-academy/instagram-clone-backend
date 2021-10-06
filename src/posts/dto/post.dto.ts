@@ -9,7 +9,7 @@ export class PostDto {
 
   likesCount: number;
 
-  userId: User;
+  user: User;
 
   clientId: string;
 

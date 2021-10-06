@@ -35,7 +35,6 @@ export class PostsService {
       authorIp: ip,
     };
     const addedPost = await this.postRepository.createPost(post);
-    delete addedPost.user.password;
     return addedPost;
   }
 

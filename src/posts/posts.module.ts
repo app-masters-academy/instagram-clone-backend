@@ -8,11 +8,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserRepository } from 'src/users/entitites/user.repository';
 import { AuthModule } from 'src/auth/auth.module';
 import { ClientRepository } from 'src/clients/entities/client.repository';
+import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
+import { CommentsModule } from 'src/comments/comments.module';
 
 @Module({
   imports: [
     AuthModule,
     UsersModule,
+    CommentsModule,
+    CloudinaryModule,
     TypeOrmModule.forFeature([
       PostRepository,
       UserRepository,

@@ -1,4 +1,6 @@
+import { Comment } from 'src/comments/entities/comment.entity';
 import { User } from 'src/users/entitites/user.entity';
+import { ILike } from '../interfaces/like.interface';
 
 export class PostDto {
   id: string;
@@ -7,9 +9,17 @@ export class PostDto {
 
   photoUrl: string;
 
-  likesCount: number;
+  likesCount?: number;
 
-  userId: User;
+  lastComment?: Comment;
+
+  comments: Comment[];
+
+  commentsCount?: number;
+
+  likes: ILike;
+
+  user: User;
 
   clientId: string;
 

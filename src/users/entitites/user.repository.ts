@@ -25,7 +25,10 @@ export class UserRepository extends Repository<User> {
 
   async findUserByEmail({ email }: CreateUserDto): Promise<User> {
     const parsedEmail = email.trim().toLowerCase();
-    const user = await this.findOne({ email: parsedEmail });
+    const user = await this.createQueryBuilder('user')
+      .where('user.email = :parsedEmail', { parsedEmail })
+      .addSelect('user.password')
+      .getOne();
     return user;
   }
 }

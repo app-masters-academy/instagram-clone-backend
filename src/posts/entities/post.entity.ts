@@ -5,12 +5,15 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from 'src/users/entitites/user.entity';
 import { randomUUID } from 'crypto';
 import { ILike } from '../interfaces/like.interface';
+
+import { User } from 'src/users/entitites/user.entity';
+import { Comment } from 'src/comments/entities/comment.entity';
 
 @Entity()
 export class Post extends BaseEntity {
@@ -26,11 +29,17 @@ export class Post extends BaseEntity {
   @Column({ nullable: false, default: 0 })
   likesCount: number;
 
-  @Column({ type: 'json', nullable: true })
+  @Column({ type: 'json', nullable: true, default: { users: [] } })
   likes: ILike;
 
-  @ManyToOne(() => User, (user: User) => user.id)
+  @ManyToOne(() => User, (user) => user.posts, { eager: true })
   user: User;
+
+  @Column({ nullable: false, default: 0 })
+  commentsCount: number;
+
+  @OneToMany(() => Comment, (comment) => comment.post)
+  comments: Comment[];
 
   @Column({ nullable: false })
   clientId: string;

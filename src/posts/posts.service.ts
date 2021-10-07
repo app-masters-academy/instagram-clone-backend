@@ -10,6 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
 
 import { ClientDto } from 'src/clients/dto/client.dto';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { UserDto } from 'src/users/dto/user.dto';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostRepository } from './entities/post.repository';
@@ -17,17 +18,23 @@ import { PostRepository } from './entities/post.repository';
 @Injectable({ scope: Scope.REQUEST })
 export class PostsService {
   constructor(
+    private cloudinaryService: CloudinaryService,
     @InjectRepository(PostRepository)
     private postRepository: PostRepository,
     @Inject(REQUEST) private readonly req: Request,
   ) {}
+
   async createPost(
     createPostDto: CreatePostDto,
     user: UserDto,
     client: ClientDto,
+    file: Express.Multer.File,
     ip: string,
   ) {
-    createPostDto.photoUrl = 'sample';
+    if (!createPostDto.photoUrl) {
+      const uploaded = await this.cloudinaryService.uploadImage(file);
+      createPostDto.photoUrl = uploaded.url;
+    }
     const post = {
       ...createPostDto,
       clientId: client.id,
@@ -35,14 +42,37 @@ export class PostsService {
       authorIp: ip,
     };
     const addedPost = await this.postRepository.createPost(post);
-    delete addedPost.user.password;
     return addedPost;
+  }
+
+  async likePost(postId: string, user: UserDto) {
+    const post = await this.postRepository.findOne(postId);
+    if (!post) {
+      throw new BadRequestException(
+        'Post not found, try another with another post id',
+      );
+    }
+    if (post.likes == null) {
+      post.likes = { users: [] };
+      await post.save();
+    }
+    if (post.likes.users.includes(user.id)) {
+      post.likes.users = post.likes.users.filter((arrUser) => {
+        return arrUser != user.id;
+      });
+      post.likesCount--;
+      await post.save();
+      return post;
+    }
+    post.likes.users.push(user.id);
+    post.likesCount++;
+    await post.save();
+    return post;
   }
 
   async findAll(clientDto: ClientDto) {
     if (this.req.headers['all-clients'] === 'false') {
-      const posts = await this.postRepository.findAll(clientDto.id);
-      return posts;
+      return await this.postRepository.findAll(clientDto.id);
     } else {
       return await this.postRepository.findAll();
     }
@@ -61,6 +91,6 @@ export class PostsService {
       throw new ForbiddenException('Cannot remove post from another user');
     }
     await post.remove();
-    return { post: postId, deleted: true };
+    return { post: post, deleted: true };
   }
 }

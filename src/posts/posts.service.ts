@@ -31,8 +31,10 @@ export class PostsService {
     file: Express.Multer.File,
     ip: string,
   ) {
-    const uploaded = await this.cloudinaryService.uploadImage(file);
-    createPostDto.photoUrl = uploaded.url;
+    if (!createPostDto.photoUrl) {
+      const uploaded = await this.cloudinaryService.uploadImage(file);
+      createPostDto.photoUrl = uploaded.url;
+    }
     const post = {
       ...createPostDto,
       clientId: client.id,
@@ -89,6 +91,6 @@ export class PostsService {
       throw new ForbiddenException('Cannot remove post from another user');
     }
     await post.remove();
-    return { post: postId, deleted: true };
+    return { post: post, deleted: true };
   }
 }

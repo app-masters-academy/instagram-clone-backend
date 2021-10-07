@@ -11,10 +11,14 @@ export class CloudinaryService {
       throw new BadRequestException('File is not an image');
     }
     return new Promise(async (resolve, reject) => {
-      const upload = v2.uploader.upload_stream((error, result) => {
-        if (error) return reject(error);
-        resolve(result);
-      });
+      const folder = process.env.CLOUDINARY_FOLDER_NAME;
+      const upload = v2.uploader.upload_stream(
+        { folder: folder },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result);
+        },
+      );
 
       sharp(file.buffer).resize(1080).png({ quality: 80 }).pipe(upload);
     });

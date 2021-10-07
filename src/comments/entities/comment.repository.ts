@@ -9,6 +9,7 @@ export class CommentRepository extends Repository<Comment> {
     const comment = await this.create({
       ...createCommentDto,
     }).save();
+    delete comment.post;
     return comment;
   }
 }

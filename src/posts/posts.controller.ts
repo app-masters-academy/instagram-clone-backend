@@ -16,13 +16,19 @@ import { AuthGuard } from '@nestjs/passport';
 import { RealIP } from 'nestjs-real-ip';
 
 import { PostsService } from './posts.service';
+import { CommentsService } from 'src/comments/comments.service';
+
 import { CreatePostDto } from './dto/create-post.dto';
 import { UserDto } from 'src/users/dto/user.dto';
 import { ClientDto } from 'src/clients/dto/client.dto';
+import { CreateCommentDto } from 'src/comments/dto/create-comment.dto';
 
 @Controller('post')
 export class PostsController {
-  constructor(private readonly postsService: PostsService) {}
+  constructor(
+    private readonly postsService: PostsService,
+    private readonly commentsService: CommentsService,
+  ) {}
 
   @Post()
   @UseGuards(AuthGuard())
@@ -52,6 +58,23 @@ export class PostsController {
   like(@Param('id') id: string, @Req() req: any) {
     const user = <UserDto>req.user;
     return this.postsService.likePost(id, user);
+  }
+
+  @Post('/:postid/comment')
+  @UseGuards(AuthGuard())
+  commentOnPost(
+    @Body() createCommentDto: CreateCommentDto,
+    @Param('postid') postid: string,
+    @Req() req: any,
+    @RealIP() ip: string,
+  ) {
+    const user = <UserDto>req.user;
+    return this.commentsService.commentOnPost(
+      createCommentDto,
+      postid,
+      user,
+      ip,
+    );
   }
 
   @Get()

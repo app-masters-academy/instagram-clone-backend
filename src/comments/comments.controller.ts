@@ -17,23 +17,6 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
-  @Post('/:postid')
-  @UseGuards(AuthGuard())
-  commentOnPost(
-    @Body() createCommentDto: CreateCommentDto,
-    @Param('postid') postid: string,
-    @Req() req: any,
-    @RealIP() ip: string,
-  ) {
-    const user = <UserDto>req.user;
-    return this.commentsService.commentOnPost(
-      createCommentDto,
-      postid,
-      user,
-      ip,
-    );
-  }
-
   @Delete('/:id')
   @UseGuards(AuthGuard())
   deleteComment(@Param('id') id: string, @Req() req: any) {

@@ -18,6 +18,6 @@ import { CommentRepository } from './entities/comment.repository';
   ],
   controllers: [CommentsController],
   providers: [CommentsService],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, CommentsService],
 })
 export class CommentsModule {}

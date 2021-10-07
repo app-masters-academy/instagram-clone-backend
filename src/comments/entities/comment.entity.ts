@@ -20,7 +20,10 @@ export class Comment extends BaseEntity {
   @Column({ nullable: false })
   text: string;
 
-  @ManyToOne(() => Post, (post) => post.comments, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Post, (post) => post.comments, {
+    onDelete: 'CASCADE',
+    cascade: true,
+  })
   post: Post;
 
   @ManyToOne(() => User, (user) => user.comments, { eager: true })

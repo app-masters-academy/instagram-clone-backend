@@ -10,6 +10,7 @@ import { UserDto } from 'src/users/dto/user.dto';
 
 import { CommentRepository } from './entities/comment.repository';
 import { PostRepository } from 'src/posts/entities/post.repository';
+import { PostDto } from 'src/posts/dto/post.dto';
 
 @Injectable()
 export class CommentsService {
@@ -26,8 +27,13 @@ export class CommentsService {
     user: UserDto,
     ip: string,
   ) {
-    const post = await this.postRepository.findOne(postId);
-    if (!post) throw new BadRequestException(`Post doens't exists`);
+    const post = <PostDto>await this.postRepository.findOne(postId, {
+      relations: ['user', 'comments'],
+    });
+    if (!post) {
+      throw new BadRequestException(`Post doens't exists`);
+    }
+    post.commentsCount++;
     const comment = {
       ...createCommentDto,
       post: post,
@@ -35,9 +41,9 @@ export class CommentsService {
       ip: ip,
     };
     const addedComment = await this.commentRepository.addComment(comment);
-    post.commentsCount++;
-    await post.save();
-    return addedComment;
+    delete post.comments;
+    post.lastComment = addedComment;
+    return post;
   }
 
   async deleteComment(id: string, user: UserDto) {
@@ -49,7 +55,8 @@ export class CommentsService {
         `Wrong comment id, or comment was already deleted`,
       );
     }
-    if (comment.user.id !== user.id || comment.post.user.id !== user.id) {
+
+    if (comment.user.id !== user.id && comment.post.user.id !== user.id) {
       throw new ForbiddenException(
         `Cannot delete comment from another person or if the post ins't yours`,
       );
@@ -57,6 +64,15 @@ export class CommentsService {
     comment.post.commentsCount--;
     await comment.post.save();
     await comment.remove();
-    return { deleted: true };
+    const post = <PostDto>await this.postRepository.findOne(comment.post.id, {
+      relations: ['comments'],
+    });
+    if (post.comments != []) {
+      post.lastComment = post.comments.reduce((a, b) => {
+        return new Date(a.createdAt) > new Date(b.createdAt) ? a : b;
+      });
+      delete post.comments;
+    }
+    return post;
   }
 }

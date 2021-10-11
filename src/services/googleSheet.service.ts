@@ -70,14 +70,27 @@ export class GoogleService {
     if (!sheet) {
       throw new InternalServerErrorException('Cannot load sheet:' + sheet);
     }
+    const columnValues = sheet.headerValues;
+    if (
+      !columnValues.includes('Id') ||
+      !columnValues.includes('Email') ||
+      !columnValues.includes('GitHub') ||
+      !columnValues.includes('Nome') ||
+      !columnValues.includes('Token')
+    ) {
+      throw new InternalServerErrorException(
+        `The spreadsheet don't have one of this properties: Id, Email, GitHub, Nome, Token`,
+      );
+    }
+
     const row = await sheet.addRow({
       Id: id,
       Email: parsedEmail,
-      Github: github.trim().toLowerCase(),
-      Nome: name.toLowerCase(),
+      GitHub: github,
+      Nome: name,
       Token: token,
     });
-    await this.cacheManager.set(row.email, row);
+    await this.cacheManager.set(row.Id, row);
     return row;
   }
 }

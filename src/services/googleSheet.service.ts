@@ -52,6 +52,10 @@ export class GoogleService {
   }
 
   async querySheetByClientId(id: string): Promise<GoogleSpreadsheetRow> {
+    const cachedRow: GoogleSpreadsheetRow = await this.cacheManager.get(id);
+    if (cachedRow) {
+      return cachedRow;
+    }
     const sheet = (await this.getDoc()).sheetsByIndex[0];
     const rows = await sheet.getRows();
     rows.forEach(async (row) => {
@@ -71,16 +75,18 @@ export class GoogleService {
       throw new InternalServerErrorException('Cannot load sheet:' + sheet);
     }
     const columnValues = sheet.headerValues;
-    if (
-      !columnValues.includes('Id') ||
-      !columnValues.includes('Email') ||
-      !columnValues.includes('GitHub') ||
-      !columnValues.includes('Nome') ||
-      !columnValues.includes('Token')
-    ) {
-      throw new InternalServerErrorException(
-        `The spreadsheet don't have one of this properties: Id, Email, GitHub, Nome, Token`,
-      );
+    if (columnValues) {
+      if (
+        !columnValues.includes('Id') ||
+        !columnValues.includes('Email') ||
+        !columnValues.includes('GitHub') ||
+        !columnValues.includes('Nome') ||
+        !columnValues.includes('Token')
+      ) {
+        throw new InternalServerErrorException(
+          `The spreadsheet don't have one of this properties: Id, Email, GitHub, Nome, Token`,
+        );
+      }
     }
 
     const row = await sheet.addRow({

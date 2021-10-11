@@ -75,7 +75,7 @@ export class GoogleService {
       Id: id,
       Email: parsedEmail,
       Github: github.trim().toLowerCase(),
-      Name: name.toLowerCase(),
+      Nome: name.toLowerCase(),
       Token: token,
     });
     await this.cacheManager.set(row.email, row);

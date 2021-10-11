@@ -7,7 +7,7 @@ export class CloudinaryService {
   uploadImage(
     file: Express.Multer.File,
   ): Promise<UploadApiResponse | UploadApiErrorResponse> {
-    if (file.mimetype !== 'image/png') {
+    if (file.mimetype != 'image/png' && file.mimetype != 'image/jpeg') {
       throw new BadRequestException('File is not an image');
     }
     return new Promise(async (resolve, reject) => {

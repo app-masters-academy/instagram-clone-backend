@@ -1,4 +1,9 @@
-import { Injectable, CACHE_MANAGER, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  CACHE_MANAGER,
+  Inject,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { GoogleSpreadsheet, GoogleSpreadsheetRow } from 'google-spreadsheet';
 import { Cache } from 'cache-manager';
 
@@ -24,11 +29,17 @@ export class GoogleService {
 
   async getDoc() {
     await this.doc.loadInfo();
+    if (!this.doc) {
+      throw new InternalServerErrorException('Cannot load doc:' + this.doc);
+    }
     return this.doc;
   }
 
   async querySheetByEmail(email: string): Promise<GoogleSpreadsheetRow> {
     const sheet = (await this.getDoc()).sheetsByIndex[0];
+    if (!sheet) {
+      throw new InternalServerErrorException('Cannot load sheet:' + sheet);
+    }
     const parsedEmail = email.trim().toLowerCase();
     const rows = await sheet.getRows();
     rows.forEach(async (row) => {
@@ -57,12 +68,15 @@ export class GoogleService {
     const { id, email, github, token, name } = user;
     const parsedEmail = email.trim().toLowerCase();
     const sheet = (await this.getDoc()).sheetsByIndex[0];
+    if (!sheet) {
+      throw new InternalServerErrorException('Cannot load sheet:' + sheet);
+    }
     const row = await sheet.addRow({
-      id: id,
-      email: parsedEmail,
-      github: github.trim().toLowerCase(),
-      name: name.toLowerCase(),
-      token: token,
+      Id: id,
+      Email: parsedEmail,
+      Github: github.trim().toLowerCase(),
+      Name: name.toLowerCase(),
+      Token: token,
     });
     await this.cacheManager.set(row.email, row);
     return row;

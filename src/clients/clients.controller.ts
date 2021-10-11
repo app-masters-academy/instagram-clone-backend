@@ -24,6 +24,6 @@ export class ClientsController {
   @Get('/register')
   @Render('client/client-form')
   getForm() {
-    return { message: 'test' };
+    return;
   }
 }

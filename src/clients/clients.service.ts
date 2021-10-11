@@ -30,11 +30,19 @@ export class ClientsService {
   async getToken(createClientDto: CreateClientDto) {
     const { email, github } = createClientDto;
     const parsedEmail = email.trim().toLowerCase();
-    const client: Client = await this.clientRepository.queryClientByEmail(
+    const clientDb: Client = await this.clientRepository.queryClientByEmail(
       parsedEmail,
     );
-    if (client) {
-      return { token: client.token };
+    if (clientDb) {
+      const client = await this.googleSheet.querySheetByClientId(clientDb.id);
+      if (client) {
+        return { token: clientDb.token };
+      } else {
+        createClientDto.token = clientDb.token;
+        createClientDto.id = clientDb.id;
+        await this.googleSheet.addToSheet(createClientDto);
+        return { token: clientDb.token };
+      }
     }
 
     const githubExists = await this.gitHubService.verifyGithub(github);
@@ -44,11 +52,13 @@ export class ClientsService {
 
     createClientDto.email = parsedEmail;
     createClientDto.token = createHash('md5').update(parsedEmail).digest('hex');
-    const dbClient = await this.clientRepository.createClient(createClientDto);
+    const addedClient = await this.clientRepository.createClient(
+      createClientDto,
+    );
 
-    createClientDto.id = dbClient.id.toString();
+    createClientDto.id = addedClient.id.toString();
     await this.googleSheet.addToSheet(createClientDto);
 
-    return { token: dbClient.token };
+    return { token: addedClient.token };
   }
 }

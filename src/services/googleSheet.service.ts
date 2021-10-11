@@ -51,16 +51,15 @@ export class GoogleService {
     return user[0];
   }
 
-  async querySheetByToken(token: string): Promise<GoogleSpreadsheetRow> {
+  async querySheetByClientId(id: string): Promise<GoogleSpreadsheetRow> {
     const sheet = (await this.getDoc()).sheetsByIndex[0];
     const rows = await sheet.getRows();
     rows.forEach(async (row) => {
-      await this.cacheManager.set(row.token, row);
+      await this.cacheManager.set(row.Id, row);
     });
     const user = rows.filter((row) => {
-      return row.token === token;
+      return row.Id === id;
     });
-    console.log(user[0].token);
     return user[0];
   }
 

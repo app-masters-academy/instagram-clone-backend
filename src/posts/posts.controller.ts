@@ -9,6 +9,8 @@ import {
   Param,
   UseInterceptors,
   UploadedFile,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
@@ -31,6 +33,7 @@ export class PostsController {
   ) {}
 
   @Post()
+  @UsePipes(new ValidationPipe())
   @UseGuards(AuthGuard())
   @UseInterceptors(
     FileInterceptor('file', {
@@ -60,6 +63,7 @@ export class PostsController {
     return this.postsService.likePost(id, user);
   }
 
+  @UsePipes(new ValidationPipe())
   @Post('/:postid/comment')
   @UseGuards(AuthGuard())
   commentOnPost(

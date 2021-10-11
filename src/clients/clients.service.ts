@@ -1,4 +1,9 @@
-import { Injectable, CACHE_MANAGER, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  CACHE_MANAGER,
+  Inject,
+  BadRequestException,
+} from '@nestjs/common';
 
 import { Cache } from 'cache-manager';
 
@@ -34,7 +39,7 @@ export class ClientsService {
 
     const githubExists = await this.gitHubService.verifyGithub(github);
     if (!githubExists) {
-      throw new Error("Provided GitHub profile don't exists");
+      return new BadRequestException("Provided GitHub profile don't exists");
     }
 
     createClientDto.email = parsedEmail;

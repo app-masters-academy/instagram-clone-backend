@@ -1,0 +1,42 @@
+<html lang='pt-br'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>Register</title>
+    <link rel='shortcut icon' type='image/x-icon' href='../css/favicon.ico' />
+    <link rel='stylesheet' href='../css/client/form.css' />
+  </head>
+  <body>
+    <div class='container'>
+      <div class='left'>
+        <div class='header'>
+          <h2 class='animation a1'>React para humanos</h2>
+          <h4 class='animation a2'>Forneça os campos para receber seu token</h4>
+        </div>
+        <form action='/client' method='post' class='form'>
+          <input
+            type='email'
+            name='email'
+            class='form-field animation a3'
+            placeholder='Endereço de email'
+          />
+          <input
+            type='text'
+            name='name'
+            class='form-field animation a4'
+            placeholder='Nome completo'
+          />
+          <input
+            type='text'
+            name='github'
+            class='form-field animation a5'
+            placeholder='Username do GitHub'
+          />
+          <button type='submit' class='animation a6'>Registrar</button>
+        </form>
+      </div>
+      <div class='right'></div>
+    </div>
+  </body>
+</html>

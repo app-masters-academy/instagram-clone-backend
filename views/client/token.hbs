@@ -1,0 +1,35 @@
+<html lang='pt-br'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <link rel='stylesheet' href='../css/client/token.css' />
+  </head>
+  <body>
+    <div class='container'>
+      <div class='holder'>
+        <div class='header animation a1'>
+          {{#if token}}
+            <div class='token-holder'>
+              <h2 class='animation a2'>Seu token de acesso: </h2>
+              <div class='token-action'>
+                <h4 class='animation a3' id='token'>{{token}}</h4>
+                <i class='far fa-clone' onclick='copyTextToClipboard()'></i>
+              </div>
+            </div>
+          {{else}}
+            <a href='/client/register'>Voltar</a>
+            <div class='error-holder animation a5'>
+              <div id='error-message'>{{message}}</div>
+            </div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+    <script
+      src='https://kit.fontawesome.com/fc6a27a00b.js'
+      crossorigin='anonymous'
+    ></script>
+    <script src='../js/client/copyToken.js'></script>
+  </body>
+</html>

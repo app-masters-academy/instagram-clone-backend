@@ -86,6 +86,7 @@ body {
   color: #fff;
   letter-spacing: 1px;
   font-family: 'Rubik', sans-serif;
+  cursor: pointer;
 }
 
 .animation {

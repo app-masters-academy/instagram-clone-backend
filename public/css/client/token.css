@@ -58,6 +58,7 @@ h4 {
 .fa-clone {
   display: inline-block;
   font-size: 20px;
+  cursor: pointer;
 }
 
 .animation {

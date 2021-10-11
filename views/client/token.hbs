@@ -12,18 +12,24 @@
           {{#if token}}
             <div class='token-holder'>
               <h2 class='animation a2'>Seu token de acesso: </h2>
-              <h4 class='animation a3' id='token'>{{token}}</h4>
+              <div class='token-action'>
+                <h4 class='animation a3' id='token'>{{token}}</h4>
+                <i class='far fa-clone' onclick='copyTextToClipboard()'></i>
+              </div>
             </div>
           {{else}}
+            <a href='/client/register'>Voltar</a>
             <div class='error-holder animation a5'>
               <div id='error-message'>{{message}}</div>
-              <div id='error-status'>{{error}}</div>
-              <div>{{statusCode}}</div>
             </div>
           {{/if}}
         </div>
       </div>
     </div>
-    <script src='../js/toClipboard.js'></script>
+    <script
+      src='https://kit.fontawesome.com/fc6a27a00b.js'
+      crossorigin='anonymous'
+    ></script>
+    <script src='../js/client/copyToken.js'></script>
   </body>
 </html>

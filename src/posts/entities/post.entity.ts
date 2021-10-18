@@ -32,7 +32,11 @@ export class Post extends BaseEntity {
   @Column({ type: 'json', nullable: true, default: { users: [] } })
   likes: ILike;
 
-  @ManyToOne(() => User, (user) => user.posts, { eager: true })
+  @ManyToOne(() => User, (user) => user.posts, {
+    eager: true,
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
   user: User;
 
   @Column({ nullable: false, default: 0 })
@@ -49,9 +53,6 @@ export class Post extends BaseEntity {
 
   @CreateDateColumn()
   createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 
   @BeforeInsert() generateUUID() {
     this.id = randomUUID();

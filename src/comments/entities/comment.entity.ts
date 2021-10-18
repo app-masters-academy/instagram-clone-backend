@@ -23,10 +23,15 @@ export class Comment extends BaseEntity {
   @ManyToOne(() => Post, (post) => post.comments, {
     onDelete: 'CASCADE',
     cascade: true,
+    nullable: false,
   })
   post: Post;
 
-  @ManyToOne(() => User, (user) => user.comments, { eager: true })
+  @ManyToOne(() => User, (user) => user.comments, {
+    eager: true,
+    onDelete: 'CASCADE',
+    nullable: false,
+  })
   user: User;
 
   @Column({ nullable: false })
@@ -34,9 +39,6 @@ export class Comment extends BaseEntity {
 
   @CreateDateColumn()
   createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 
   @BeforeInsert()
   generateUUID() {

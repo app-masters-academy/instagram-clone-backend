@@ -6,7 +6,6 @@ import {
   Entity,
   ManyToOne,
   PrimaryColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 import { randomUUID } from 'crypto';
 import { User } from 'src/users/entitites/user.entity';

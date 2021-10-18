@@ -7,7 +7,6 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 import { randomUUID } from 'crypto';
 import { ILike } from '../interfaces/like.interface';

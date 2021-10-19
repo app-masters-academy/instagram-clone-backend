@@ -41,7 +41,7 @@ export class UsersService {
     await this.cacheManager.set(userExists.email, userExists);
     const passEqual = await compare(password, userExists.password);
     if (!passEqual) {
-      throw new BadRequestException('Wrong email or password');
+      throw new BadRequestException('Senha ou email incorretos');
     }
     return await this.authService.login(userExists);
   }

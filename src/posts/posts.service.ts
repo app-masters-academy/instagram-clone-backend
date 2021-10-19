@@ -32,6 +32,11 @@ export class PostsService {
     ip: string,
   ) {
     if (!createPostDto.photoUrl) {
+      if (!file) {
+        throw new BadRequestException(
+          `Forneça um link no campo "photoUrl" (form url encoded) ou um arquivo no campo "file" (multipart)`,
+        );
+      }
       const uploaded = await this.cloudinaryService.uploadImage(file);
       createPostDto.photoUrl = uploaded.url;
     }
@@ -49,7 +54,7 @@ export class PostsService {
     const post = await this.postRepository.findOne(postId);
     if (!post) {
       throw new BadRequestException(
-        'Post not found, try another with another post id',
+        'Post não encontrado, tente com outro post id',
       );
     }
     if (post.likes == null) {
@@ -83,12 +88,12 @@ export class PostsService {
       relations: ['user'],
     });
     if (!post) {
-      throw new BadRequestException(
-        `This post id doesn't exists or post is already excluded`,
-      );
+      throw new BadRequestException(`O post não existe ou já foi excluído`);
     }
     if (post.user.id !== user.id) {
-      throw new ForbiddenException('Cannot remove post from another user');
+      throw new ForbiddenException(
+        'Não é possível remover o post de outro usuário',
+      );
     }
     await post.remove();
     return { post: post, deleted: true };

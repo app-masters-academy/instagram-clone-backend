@@ -3,7 +3,7 @@ import { PostDto } from 'src/posts/dto/post.dto';
 import { UserDto } from 'src/users/dto/user.dto';
 
 export class CreateCommentDto {
-  @IsNotEmpty({ message: 'The comment need a text' })
+  @IsNotEmpty({ message: 'O comentário precisa de um texto' })
   text: string;
 
   post: PostDto;

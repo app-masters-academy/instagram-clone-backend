@@ -31,7 +31,7 @@ export class CommentsService {
       relations: ['user', 'comments'],
     });
     if (!post) {
-      throw new BadRequestException(`Post doens't exists`);
+      throw new BadRequestException(`O Post requisitado não existe`);
     }
     post.commentsCount++;
     const comment = {
@@ -52,13 +52,13 @@ export class CommentsService {
     });
     if (!comment) {
       throw new BadRequestException(
-        `Wrong comment id, or comment was already deleted`,
+        `O comentário já foi deletado ou o id está errado`,
       );
     }
 
     if (comment.user.id !== user.id && comment.post.user.id !== user.id) {
       throw new ForbiddenException(
-        `Cannot delete comment from another person or if the post ins't yours`,
+        `Não é possível deletar um comentário de outra pessoa ou se o post não é seu`,
       );
     }
     comment.post.commentsCount--;

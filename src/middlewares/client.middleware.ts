@@ -24,7 +24,7 @@ export class AuthMiddleware implements NestMiddleware {
   async use(req: Request, res: Response, next: NextFunction) {
     const rawToken = req.headers['client-token'];
     if (!rawToken) {
-      throw new BadRequestException('header client-token is required');
+      throw new BadRequestException('O header client-token é necessário');
     }
     const token = rawToken.toString();
 
@@ -33,7 +33,7 @@ export class AuthMiddleware implements NestMiddleware {
       (await this.clientRepository.queryClientByToken(token));
     if (!client) {
       throw new BadRequestException(
-        'header client-token is wrong, client not found',
+        'O header client-token está errado, client não encontrado',
       );
     }
     await this.cacheManager.set(client.token, client);

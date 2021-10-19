@@ -68,7 +68,7 @@ export class GoogleService {
   }
 
   async addToSheet(user: CreateClientDto): Promise<GoogleSpreadsheetRow> {
-    const { id, email, github, token, name } = user;
+    const { id, email, github, token, name, registro } = user;
     const parsedEmail = email.trim().toLowerCase();
     const sheet = (await this.getDoc()).sheetsByIndex[0];
     if (!sheet) {
@@ -95,6 +95,7 @@ export class GoogleService {
       GitHub: github,
       Nome: name,
       Token: token,
+      Registro: registro,
     });
     await this.cacheManager.set(row.Id, row);
     return row;

@@ -40,6 +40,10 @@ export class ClientsService {
       } else {
         createClientDto.token = clientDb.token;
         createClientDto.id = clientDb.id;
+        createClientDto.registro = new Date(clientDb.createdAt).toLocaleString(
+          'pt-BR',
+          { timeZone: 'America/Sao_Paulo' },
+        );
         await this.googleSheet.addToSheet(createClientDto);
         return { token: clientDb.token };
       }
@@ -57,6 +61,10 @@ export class ClientsService {
     );
 
     createClientDto.id = addedClient.id.toString();
+    createClientDto.registro = new Date(addedClient.createdAt).toLocaleString(
+      'pt-BR',
+      { timeZone: 'America/Sao_Paulo' },
+    );
     await this.googleSheet.addToSheet(createClientDto);
 
     return { token: addedClient.token };

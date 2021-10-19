@@ -13,4 +13,6 @@ export class CreateClientDto {
   name: string;
 
   token: string;
+
+  registro: string;
 }

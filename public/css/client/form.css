@@ -35,6 +35,31 @@ body {
   background-position: center;
 }
 
+.modal {
+  position: absolute;
+  display: flex;
+  color: rgb(19, 19, 19);
+  padding: 50px;
+  background-color: rgb(238, 236, 236);
+  transition: 0.2s;
+}
+
+.modal-left-icon {
+  align-self: center;
+  font-size: 2em;
+  margin-right: 30px;
+}
+
+.modal-close-icon {
+  font: 1.5em;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.modal > h2 {
+  font-size: 1.4em;
+}
+
 .header > h2 {
   margin: 0;
   color: #4f46a5;

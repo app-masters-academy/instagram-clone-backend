@@ -36,7 +36,19 @@
           <button type='submit' class='animation a6'>Registrar</button>
         </form>
       </div>
-      <div class='right'></div>
+      <div class='modal animation a6' id='modal'>
+        <span class='modal-left-icon'>&#9888;</span>
+        <h2>Ao se registrar como aluno de nosso treinamento, você obterá um
+          token único, que deverá ser usado em todas as requisições enviadas
+          pelo axios, afim do backend reconhecer que você é um aluno do nosso
+          treinamento e permitir organizar os posts de sua rede social de forma
+          separada dos demais alunos (opcionalmente).
+        </h2>
+        <span class='modal-close-icon' onclick='closeModal()'>&#10006;</span>
+      </div>
+      <div class='right'>
+      </div>
     </div>
+    <script src='../js/client/closeModal.js'></script>
   </body>
 </html>

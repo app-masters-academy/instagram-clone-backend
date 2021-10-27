@@ -8,6 +8,14 @@
   <body>
     <div class='container'>
       <div class='holder'>
+        <div class='modal animation a6' id='modal'>
+          <span class='modal-icon'>&#9432;</span>
+          <h1>Guarde seu token para utiliza-lo nas chamadas axios, enviando no
+            header `client-token`. Se ainda não viu esta aula, salve o token
+            para logo mais. Este conteúdo é apresentado no terceiro encontro.
+          </h1>
+          <span class='modal-close-icon' onclick='closeModal()'>&#10006;</span>
+        </div>
         <div class='header animation a1'>
           {{#if token}}
             <div class='token-holder'>
@@ -31,5 +39,6 @@
       crossorigin='anonymous'
     ></script>
     <script src='../js/client/copyToken.js'></script>
+    <script src='../js/client/closeModal.js'></script>
   </body>
 </html>

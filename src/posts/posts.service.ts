@@ -83,6 +83,18 @@ export class PostsService {
     }
   }
 
+  async findOne(postId: string) {
+    const post = await this.postRepository.findOne(postId, {
+      relations: ['user', 'comments'],
+    });
+    if (!post) {
+      throw new BadRequestException(
+        'O post não existe ou o id fornecido está incorreto',
+      );
+    }
+    return post;
+  }
+
   async deletePost(postId: string, user: UserDto) {
     const post = await this.postRepository.findOne(postId, {
       relations: ['user'],

@@ -87,6 +87,12 @@ export class PostsController {
     return this.postsService.findAll(client);
   }
 
+  @Get('/:id')
+  @UseGuards(AuthGuard())
+  findOne(@Param('id') id: string) {
+    return this.postsService.findOne(id);
+  }
+
   @Delete('/:id')
   @UseGuards(AuthGuard())
   deletePost(@Param('id') id: string, @Req() req: any) {

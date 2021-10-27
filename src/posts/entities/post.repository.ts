@@ -8,7 +8,10 @@ import { Post } from './post.entity';
 export class PostRepository extends Repository<Post> {
   async findAll(clientId?: string) {
     if (!clientId) {
-      const posts = await this.find({ relations: ['user', 'comments'] });
+      const posts = await this.find({
+        relations: ['user', 'comments'],
+        order: { createdAt: 'DESC' },
+      });
       posts.forEach(async (post) => {
         post.commentsCount = post.comments.length;
         await post.save();
@@ -26,6 +29,7 @@ export class PostRepository extends Repository<Post> {
     }
     const posts = await this.find({
       relations: ['user', 'comments'],
+      order: { createdAt: 'DESC' },
       where: { clientId: clientId },
     });
     posts.forEach(async (post) => {
